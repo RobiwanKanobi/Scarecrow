@@ -1,7 +1,7 @@
 extends Node
 
-@export var day_duration: float = 120.0
-@export var night_duration: float = 60.0
+@export var day_duration: float = 60.0
+@export var night_duration: float = 45.0
 
 var day_count: int = 1
 var is_night: bool = false

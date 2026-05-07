@@ -55,6 +55,20 @@ func _connect_refs() -> void:
 # UI Construction
 # ──────────────────────────────────────────────────────────────────────────────
 
+static func _dark_panel() -> StyleBoxFlat:
+	var s := StyleBoxFlat.new()
+	s.bg_color = Color(0.08, 0.08, 0.12, 0.88)
+	s.border_width_left = 1
+	s.border_width_right = 1
+	s.border_width_top = 1
+	s.border_width_bottom = 1
+	s.border_color = Color(0.4, 0.4, 0.5, 0.8)
+	s.corner_radius_top_left = 4
+	s.corner_radius_top_right = 4
+	s.corner_radius_bottom_left = 4
+	s.corner_radius_bottom_right = 4
+	return s
+
 func _build_ui() -> void:
 	var root := Control.new()
 	root.set_anchors_preset(Control.PRESET_FULL_RECT)
@@ -68,6 +82,7 @@ func _build_ui() -> void:
 
 func _build_hud(root: Control) -> void:
 	var hud := PanelContainer.new()
+	hud.add_theme_stylebox_override("panel", _dark_panel())
 	hud.set_anchor_and_offset(SIDE_LEFT, 0.0, 8.0)
 	hud.set_anchor_and_offset(SIDE_TOP, 0.0, 8.0)
 	hud.set_anchor_and_offset(SIDE_RIGHT, 0.0, 320.0)
@@ -84,6 +99,7 @@ func _build_hud(root: Control) -> void:
 	_day_label = Label.new()
 	_day_label.text = "Day 1"
 	_day_label.add_theme_font_size_override("font_size", 16)
+	_day_label.add_theme_color_override("font_color", Color(1.0, 1.0, 1.0))
 	row1.add_child(_day_label)
 
 	_phase_label = Label.new()
@@ -105,6 +121,7 @@ func _build_hud(root: Control) -> void:
 	var h_lbl := Label.new()
 	h_lbl.text = "Health: "
 	h_lbl.add_theme_font_size_override("font_size", 13)
+	h_lbl.add_theme_color_override("font_color", Color(1.0, 0.6, 0.6))
 	h_row.add_child(h_lbl)
 	_health_bar = ProgressBar.new()
 	_health_bar.min_value = 0.0
@@ -119,6 +136,7 @@ func _build_hud(root: Control) -> void:
 	var g_lbl := Label.new()
 	g_lbl.text = "Vitality:"
 	g_lbl.add_theme_font_size_override("font_size", 13)
+	g_lbl.add_theme_color_override("font_color", Color(0.6, 1.0, 0.6))
 	g_row.add_child(g_lbl)
 	_hunger_bar = ProgressBar.new()
 	_hunger_bar.min_value = 0.0
@@ -131,11 +149,13 @@ func _build_hud(root: Control) -> void:
 	var inv_row := HBoxContainer.new()
 	vbox.add_child(inv_row)
 	var items := ["straw", "stick", "cloth", "stone", "seed", "berry"]
-	for item_id: String in items:
+	var abbrevs := ["Str", "Stk", "Clo", "Stn", "Sed", "Bry"]
+	for i: int in range(items.size()):
+		var item_id: String = items[i]
 		var lbl := Label.new()
-		lbl.text = "%s:0" % item_id.substr(0, 2)
+		lbl.text = "%s:0" % abbrevs[i]
 		lbl.add_theme_font_size_override("font_size", 11)
-		lbl.custom_minimum_size = Vector2(38.0, 0.0)
+		lbl.custom_minimum_size = Vector2(42.0, 0.0)
 		inv_row.add_child(lbl)
 		_item_labels[item_id] = lbl
 
@@ -148,6 +168,7 @@ func _build_hud(root: Control) -> void:
 
 func _build_inventory_panel(root: Control) -> void:
 	_inv_panel = PanelContainer.new()
+	_inv_panel.add_theme_stylebox_override("panel", _dark_panel())
 	_inv_panel.set_anchor_and_offset(SIDE_LEFT, 1.0, -280.0)
 	_inv_panel.set_anchor_and_offset(SIDE_TOP, 0.0, 8.0)
 	_inv_panel.set_anchor_and_offset(SIDE_RIGHT, 1.0, -8.0)
@@ -161,6 +182,7 @@ func _build_inventory_panel(root: Control) -> void:
 	var title := Label.new()
 	title.text = "─ INVENTORY ─"
 	title.add_theme_font_size_override("font_size", 15)
+	title.add_theme_color_override("font_color", Color(1.0, 1.0, 0.7))
 	vbox.add_child(title)
 
 	var items := ["straw", "stick", "cloth", "stone", "seed", "berry"]
@@ -171,10 +193,12 @@ func _build_inventory_panel(root: Control) -> void:
 		var name_lbl := Label.new()
 		name_lbl.text = names[i] + ":"
 		name_lbl.custom_minimum_size = Vector2(70.0, 0.0)
+		name_lbl.add_theme_color_override("font_color", Color(0.9, 0.9, 0.9))
 		row.add_child(name_lbl)
 		var count_lbl := Label.new()
 		count_lbl.text = "0"
 		count_lbl.name = "inv_" + items[i]
+		count_lbl.add_theme_color_override("font_color", Color(1.0, 1.0, 0.5))
 		row.add_child(count_lbl)
 
 	var close_btn := Button.new()
@@ -184,23 +208,30 @@ func _build_inventory_panel(root: Control) -> void:
 
 func _build_crafting_panel(root: Control) -> void:
 	_craft_panel = PanelContainer.new()
-	_craft_panel.set_anchor_and_offset(SIDE_LEFT, 0.5, -180.0)
+	_craft_panel.add_theme_stylebox_override("panel", _dark_panel())
+	_craft_panel.set_anchor_and_offset(SIDE_LEFT, 0.5, -195.0)
 	_craft_panel.set_anchor_and_offset(SIDE_TOP, 0.0, 8.0)
-	_craft_panel.set_anchor_and_offset(SIDE_RIGHT, 0.5, 180.0)
-	_craft_panel.set_anchor_and_offset(SIDE_BOTTOM, 0.0, 440.0)
+	_craft_panel.set_anchor_and_offset(SIDE_RIGHT, 0.5, 195.0)
+	_craft_panel.set_anchor_and_offset(SIDE_BOTTOM, 0.0, 460.0)
 	_craft_panel.visible = false
 	root.add_child(_craft_panel)
 
-	var scroll := ScrollContainer.new()
-	scroll.custom_minimum_size = Vector2(360.0, 400.0)
-	_craft_panel.add_child(scroll)
+	var margin := MarginContainer.new()
+	margin.add_theme_constant_override("margin_left", 8)
+	margin.add_theme_constant_override("margin_right", 8)
+	margin.add_theme_constant_override("margin_top", 8)
+	margin.add_theme_constant_override("margin_bottom", 8)
+	_craft_panel.add_child(margin)
 
 	_recipe_container = VBoxContainer.new()
-	scroll.add_child(_recipe_container)
+	_recipe_container.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+	_recipe_container.size_flags_vertical = Control.SIZE_EXPAND_FILL
+	margin.add_child(_recipe_container)
 
 	var title := Label.new()
 	title.text = "─ CRAFTING ─"
 	title.add_theme_font_size_override("font_size", 15)
+	title.add_theme_color_override("font_color", Color(1.0, 1.0, 0.7))
 	_recipe_container.add_child(title)
 
 func _build_recipe_list() -> void:
@@ -211,33 +242,20 @@ func _build_recipe_list() -> void:
 			child.queue_free()
 
 	for recipe: Dictionary in _crafting_manager.recipes:
-		var row := HBoxContainer.new()
-		_recipe_container.add_child(row)
-
-		var info := VBoxContainer.new()
-		info.size_flags_horizontal = Control.SIZE_EXPAND_FILL
-		row.add_child(info)
-
-		var name_lbl := Label.new()
-		name_lbl.text = recipe["display_name"]
-		name_lbl.add_theme_font_size_override("font_size", 13)
-		info.add_child(name_lbl)
+		var sep := HSeparator.new()
+		_recipe_container.add_child(sep)
 
 		var cost_str := ""
 		for item: String in recipe["cost"]:
-			cost_str += "%s:%d  " % [item, recipe["cost"][item]]
-		var cost_lbl := Label.new()
-		cost_lbl.text = cost_str.strip_edges()
-		cost_lbl.add_theme_font_size_override("font_size", 11)
-		cost_lbl.add_theme_color_override("font_color", Color(0.8, 0.8, 0.6))
-		info.add_child(cost_lbl)
+			cost_str += " %s×%d" % [item, recipe["cost"][item]]
 
 		var btn := Button.new()
-		btn.text = "Craft"
-		btn.custom_minimum_size = Vector2(60.0, 0.0)
+		btn.text = "%s\n%s" % [recipe["display_name"], cost_str.strip_edges()]
+		btn.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+		btn.custom_minimum_size = Vector2(0.0, 42.0)
 		btn.pressed.connect(_on_craft_pressed.bind(recipe["id"]))
 		btn.name = "craft_btn_" + recipe["id"]
-		row.add_child(btn)
+		_recipe_container.add_child(btn)
 
 	var close_btn := Button.new()
 	close_btn.text = "Close [C]"
@@ -267,12 +285,18 @@ func _on_hunger_changed(new_hunger: float, max_hunger: float) -> void:
 		_hunger_bar.max_value = max_hunger
 		_hunger_bar.value = new_hunger
 
+const _ABBREVS: Dictionary = {
+	"straw": "Str", "stick": "Stk", "cloth": "Clo",
+	"stone": "Stn", "seed": "Sed", "berry": "Bry",
+}
+
 func _refresh_inventory_display() -> void:
 	if _inventory_manager == null:
 		return
 	for item_id: String in _item_labels:
 		var count: int = _inventory_manager.get_item_count(item_id)
-		(_item_labels[item_id] as Label).text = "%s:%d" % [item_id.substr(0, 2), count]
+		var abbr: String = _ABBREVS.get(item_id, item_id.substr(0, 3))
+		(_item_labels[item_id] as Label).text = "%s:%d" % [abbr, count]
 
 	if _inv_visible:
 		_update_full_inventory()

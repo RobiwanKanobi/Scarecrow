@@ -3,13 +3,13 @@
 [ext_resource type="Script" path="res://scripts/world/ResourceNode.gd" id="1_resnd"]
 
 [sub_resource type="BoxMesh" id="BoxMesh_1"]
-size = Vector3(0.8, 0.8, 0.8)
+size = Vector3(1.0, 1.0, 1.0)
 
 [sub_resource type="StandardMaterial3D" id="Material_1"]
 albedo_color = Color(0.8, 0.7, 0.2, 1)
 
 [sub_resource type="BoxShape3D" id="BoxShape3D_1"]
-size = Vector3(0.8, 0.8, 0.8)
+size = Vector3(1.0, 1.0, 1.0)
 
 [node name="ResourceNode" type="StaticBody3D"]
 script = ExtResource("1_resnd")

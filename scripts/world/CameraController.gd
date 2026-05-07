@@ -1,7 +1,7 @@
 extends Node3D
 
 @export var follow_speed: float = 6.0
-@export var camera_offset: Vector3 = Vector3(0.0, 14.0, 9.0)
+@export var camera_offset: Vector3 = Vector3(0.0, 12.0, 8.0)
 
 var _target: Node3D
 var _camera: Camera3D
@@ -10,7 +10,7 @@ func _ready() -> void:
 	_camera = get_node_or_null("Camera3D")
 	if _camera:
 		_camera.projection = Camera3D.PROJECTION_ORTHOGONAL
-		_camera.size = 20.0
+		_camera.size = 12.0
 		_camera.position = camera_offset
 		_camera.rotation_degrees = Vector3(-55.0, 0.0, 0.0)
 
