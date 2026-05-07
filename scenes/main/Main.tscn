@@ -1,0 +1,60 @@
+[gd_scene load_steps=12 format=3 uid="uid://c4jlm8br9f5pd"]
+
+[ext_resource type="Script" path="res://scripts/systems/GameManager.gd" id="1_gm"]
+[ext_resource type="Script" path="res://scripts/systems/TimeManager.gd" id="2_tm"]
+[ext_resource type="Script" path="res://scripts/systems/InventoryManager.gd" id="3_im"]
+[ext_resource type="Script" path="res://scripts/systems/CraftingManager.gd" id="4_cm"]
+[ext_resource type="Script" path="res://scripts/systems/PlacementManager.gd" id="5_pm"]
+[ext_resource type="Script" path="res://scripts/systems/EnemySpawner.gd" id="6_es"]
+[ext_resource type="Script" path="res://scripts/world/CameraController.gd" id="7_cc"]
+[ext_resource type="PackedScene" path="res://scenes/world/TestFarm.tscn" id="8_tf"]
+[ext_resource type="PackedScene" path="res://scenes/player/Player.tscn" id="9_pl"]
+[ext_resource type="PackedScene" path="res://scenes/ui/GameUI.tscn" id="10_ui"]
+
+[sub_resource type="Environment" id="Environment_1"]
+background_mode = 1
+background_color = Color(0.53, 0.64, 0.82, 1)
+ambient_light_source = 2
+ambient_light_color = Color(0.7, 0.7, 0.8, 1)
+ambient_light_energy = 1.0
+
+[node name="Main" type="Node3D"]
+
+[node name="GameManager" type="Node" parent="."]
+script = ExtResource("1_gm")
+
+[node name="TimeManager" type="Node" parent="."]
+script = ExtResource("2_tm")
+
+[node name="InventoryManager" type="Node" parent="."]
+script = ExtResource("3_im")
+
+[node name="CraftingManager" type="Node" parent="."]
+script = ExtResource("4_cm")
+
+[node name="PlacementManager" type="Node" parent="."]
+script = ExtResource("5_pm")
+
+[node name="EnemySpawner" type="Node" parent="."]
+script = ExtResource("6_es")
+
+[node name="TestFarm" parent="." instance=ExtResource("8_tf")]
+
+[node name="Player" parent="." instance=ExtResource("9_pl")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1, 0)
+
+[node name="CameraRig" type="Node3D" parent="."]
+script = ExtResource("7_cc")
+
+[node name="Camera3D" type="Camera3D" parent="CameraRig"]
+
+[node name="DirectionalLight3D" type="DirectionalLight3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 0.574, -0.819, 0, 0.819, 0.574, 0, 10, 5)
+light_color = Color(1, 0.95, 0.8, 1)
+light_energy = 1.5
+shadow_enabled = true
+
+[node name="WorldEnvironment" type="WorldEnvironment" parent="."]
+environment = SubResource("Environment_1")
+
+[node name="GameUI" parent="." instance=ExtResource("10_ui")]
