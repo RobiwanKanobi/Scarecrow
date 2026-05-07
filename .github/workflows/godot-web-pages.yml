@@ -6,6 +6,8 @@ name: Build Web and deploy to Pages
 on:
   push:
     branches: [ main ]
+  pull_request:
+    branches: [ main ]
   workflow_dispatch:
 
 permissions:
@@ -28,21 +30,24 @@ jobs:
         id: export
         uses: firebelley/godot-export@v7.0.0
         with:
-          godot_executable_download_url: "https://downloads.godotengine.org/?version=4.6.1&flavor=stable&slug=linux.x86_64.zip&platform=linux.64"
-          godot_export_templates_download_url: "https://downloads.godotengine.org/?version=4.6.1&flavor=stable&slug=export_templates.tpz&platform=templates"
+          godot_executable_download_url: "https://github.com/godotengine/godot/releases/download/4.6.1-stable/Godot_v4.6.1-stable_linux.x86_64.zip"
+          godot_export_templates_download_url: "https://github.com/godotengine/godot/releases/download/4.6.1-stable/Godot_v4.6.1-stable_export_templates.tpz"
           relative_project_path: ./
           presets_to_export: "Web"
           cache: true
 
       - name: Setup Pages
+        if: github.ref == 'refs/heads/main' || github.event_name == 'workflow_dispatch'
         uses: actions/configure-pages@v4
 
       - name: Upload artifact for Pages
+        if: github.ref == 'refs/heads/main' || github.event_name == 'workflow_dispatch'
         uses: actions/upload-pages-artifact@v3
         with:
           path: "${{ steps.export.outputs.build_directory }}/Web"
 
   deploy:
+    if: github.ref == 'refs/heads/main' || github.event_name == 'workflow_dispatch'
     needs: build
     runs-on: ubuntu-latest
     environment:

@@ -1,0 +1,41 @@
+[gd_scene load_steps=8 format=3 uid="uid://dl7sv3kb8c2m5"]
+
+[ext_resource type="Script" path="res://scripts/player/PlayerController.gd" id="1_plyr"]
+[ext_resource type="Script" path="res://scripts/player/PlayerStats.gd" id="2_stat"]
+
+[sub_resource type="CapsuleShape3D" id="CapsuleShape3D_body"]
+radius = 0.32
+height = 1.0
+
+[sub_resource type="SphereShape3D" id="SphereShape3D_interact"]
+radius = 2.2
+
+[sub_resource type="CapsuleMesh" id="CapsuleMesh_1"]
+radius = 0.32
+height = 1.0
+
+[sub_resource type="StandardMaterial3D" id="Material_player"]
+albedo_color = Color(0.82, 0.72, 0.42, 1)
+
+[node name="Player" type="CharacterBody3D"]
+script = ExtResource("1_plyr")
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.5, 0)
+shape = SubResource("CapsuleShape3D_body")
+
+[node name="Visual" type="MeshInstance3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.5, 0)
+mesh = SubResource("CapsuleMesh_1")
+surface_material_override/0 = SubResource("Material_player")
+
+[node name="PlayerStats" type="Node" parent="."]
+script = ExtResource("2_stat")
+
+[node name="InteractionDetector" type="Area3D" parent="."]
+monitoring = true
+monitorable = false
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="InteractionDetector"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.5, 0)
+shape = SubResource("SphereShape3D_interact")
