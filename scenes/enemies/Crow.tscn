@@ -1,16 +1,17 @@
-[gd_scene load_steps=6 format=3 uid="uid://dn8rv4mc6b2pa"]
+[gd_scene load_steps=5 format=3 uid="uid://dn8rv4mc6b2pa"]
 
 [ext_resource type="Script" path="res://scripts/enemies/EnemyCrow.gd" id="1_crow"]
+[ext_resource type="Texture2D" path="res://art/sprites/enemy_crow.png" id="2_tex"]
 
 [sub_resource type="CapsuleShape3D" id="CapsuleShape3D_crow"]
 radius = 0.28
 height = 0.6
 
-[sub_resource type="BoxMesh" id="BoxMesh_crow"]
-size = Vector3(0.5, 0.5, 0.5)
-
 [sub_resource type="StandardMaterial3D" id="Material_crow"]
-albedo_color = Color(0.1, 0.08, 0.15, 1)
+transparency = 1
+albedo_texture = ExtResource("2_tex")
+billboard_mode = 1
+texture_filter = 5
 
 [node name="Crow" type="CharacterBody3D"]
 script = ExtResource("1_crow")
@@ -20,6 +21,13 @@ transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.3, 0)
 shape = SubResource("CapsuleShape3D_crow")
 
 [node name="Visual" type="MeshInstance3D" parent="."]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.3, 0)
-mesh = SubResource("BoxMesh_crow")
-surface_material_override/0 = SubResource("Material_crow")
+visible = false
+
+[node name="Sprite3D" type="Sprite3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.4, 0)
+texture = ExtResource("2_tex")
+pixel_size = 0.004
+billboard = 1
+transparent = true
+alpha_cut = 1
+material_override = SubResource("Material_crow")

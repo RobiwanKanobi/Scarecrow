@@ -15,6 +15,10 @@ func _ready() -> void:
 	harvests_remaining = max_harvests
 	_visual = get_node_or_null("Visual")
 	add_to_group("resource_nodes")
+	# Prefer Sprite3D if present (replaces the old MeshInstance3D visual)
+	var sprite := get_node_or_null("Sprite3D") as Sprite3D
+	if sprite:
+		_visual = null  # Don't use legacy mesh path
 
 func interact(_player: Node) -> void:
 	if _depleted:
@@ -37,7 +41,11 @@ func _harvest() -> void:
 
 func _deplete() -> void:
 	_depleted = true
-	if _visual:
+	# Dim the sprite to show depletion
+	var sprite := get_node_or_null("Sprite3D") as Sprite3D
+	if sprite:
+		sprite.modulate = Color(0.35, 0.35, 0.35, 0.8)
+	elif _visual:
 		var mat := StandardMaterial3D.new()
 		mat.albedo_color = Color(0.3, 0.3, 0.3)
 		_visual.material_override = mat

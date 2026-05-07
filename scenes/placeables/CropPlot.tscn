@@ -1,23 +1,31 @@
-[gd_scene load_steps=5 format=3 uid="uid://co3pw8nf5c1qd"]
+[gd_scene load_steps=4 format=3 uid="uid://co3pw8nf5c1qd"]
 
 [ext_resource type="Script" path="res://scripts/world/CropPlot.gd" id="1_crop"]
-
-[sub_resource type="BoxMesh" id="BoxMesh_crop"]
-size = Vector3(1.2, 0.2, 1.2)
-
-[sub_resource type="StandardMaterial3D" id="Material_crop"]
-albedo_color = Color(0.55, 0.4, 0.2, 1)
+[ext_resource type="Texture2D" path="res://art/sprites/placeable_cropplot.png" id="2_tex"]
 
 [sub_resource type="BoxShape3D" id="BoxShape3D_crop"]
 size = Vector3(1.2, 0.2, 1.2)
+
+[sub_resource type="StandardMaterial3D" id="Material_crop"]
+transparency = 1
+albedo_texture = ExtResource("2_tex")
+billboard_mode = 1
+texture_filter = 5
 
 [node name="CropPlot" type="StaticBody3D"]
 script = ExtResource("1_crop")
 
 [node name="Visual" type="MeshInstance3D" parent="."]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.1, 0)
-mesh = SubResource("BoxMesh_crop")
-surface_material_override/0 = SubResource("Material_crop")
+visible = false
+
+[node name="Sprite3D" type="Sprite3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.2, 0)
+texture = ExtResource("2_tex")
+pixel_size = 0.005
+billboard = 1
+transparent = true
+alpha_cut = 1
+material_override = SubResource("Material_crop")
 
 [node name="CollisionShape3D" type="CollisionShape3D" parent="."]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.1, 0)

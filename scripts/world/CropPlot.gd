@@ -21,6 +21,9 @@ const STATE_COLORS: Dictionary = {
 func _ready() -> void:
 	current_health = max_health
 	_visual = get_node_or_null("Visual")
+	var sprite := get_node_or_null("Sprite3D")
+	if sprite:
+		_visual = null  # Use sprite path instead
 	add_to_group("crop_plots")
 	add_to_group("placeables")
 	_update_visual()
@@ -72,6 +75,14 @@ func take_damage(amount: float) -> void:
 		GameEvents.message_requested.emit("A crop was destroyed by crows!")
 
 func _update_visual() -> void:
+	var sprite := get_node_or_null("Sprite3D") as Sprite3D
+	if sprite:
+		match crop_state:
+			CropState.PLANTED: sprite.modulate = Color(0.7, 0.5, 0.3)
+			CropState.GROWING: sprite.modulate = Color(0.6, 0.9, 0.5)
+			CropState.READY:   sprite.modulate = Color(1.0, 1.0, 1.0)
+			CropState.DEAD:    sprite.modulate = Color(0.3, 0.2, 0.1, 0.6)
+		return
 	if _visual == null:
 		return
 	var mat := StandardMaterial3D.new()

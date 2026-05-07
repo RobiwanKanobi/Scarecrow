@@ -3,39 +3,42 @@ extends Node3D
 const RESOURCE_NODE_SCENE := preload("res://scenes/resources/ResourceNode.tscn")
 
 # Resource node definitions: [resource_id, display_name, max_harvests, color, secondary_id, secondary_amt, positions]
+const SPRITE_PATHS: Dictionary = {
+	"straw": "res://art/sprites/resource_hay.png",
+	"stick": "res://art/sprites/resource_twigs.png",
+	"stone": "res://art/sprites/resource_rock.png",
+	"cloth": "res://art/sprites/resource_cloth.png",
+	"berry": "res://art/sprites/resource_berries.png",
+}
+
 const RESOURCE_DEFS: Array = [
 	{
 		"resource_id": "straw", "display_name": "Hay Pile",
 		"amount": 2, "max_harvests": 3,
-		"color": Color(0.80, 0.72, 0.22),
 		"secondary_id": "", "secondary_amt": 0,
 		"positions": [Vector3(-5, 0, -5), Vector3(5, 0, -3), Vector3(-8, 0, 3), Vector3(0, 0, 7)],
 	},
 	{
 		"resource_id": "stick", "display_name": "Twig Bush",
 		"amount": 1, "max_harvests": 2,
-		"color": Color(0.40, 0.28, 0.12),
 		"secondary_id": "", "secondary_amt": 0,
 		"positions": [Vector3(7, 0, 5), Vector3(-6, 0, 7), Vector3(9, 0, -6)],
 	},
 	{
 		"resource_id": "stone", "display_name": "Rock",
 		"amount": 1, "max_harvests": 3,
-		"color": Color(0.55, 0.55, 0.58),
 		"secondary_id": "", "secondary_amt": 0,
 		"positions": [Vector3(3, 0, -8), Vector3(-10, 0, -2), Vector3(10, 0, 2), Vector3(-4, 0, -12)],
 	},
 	{
 		"resource_id": "cloth", "display_name": "Cloth Line",
 		"amount": 1, "max_harvests": 2,
-		"color": Color(0.82, 0.80, 0.88),
 		"secondary_id": "", "secondary_amt": 0,
 		"positions": [Vector3(-3, 0, 9), Vector3(8, 0, -9)],
 	},
 	{
 		"resource_id": "berry", "display_name": "Berry Bush",
 		"amount": 2, "max_harvests": 3,
-		"color": Color(0.28, 0.10, 0.40),
 		"secondary_id": "seed", "secondary_amt": 1,
 		"positions": [Vector3(5, 0, 8), Vector3(-7, 0, -9), Vector3(12, 0, -3)],
 	},
@@ -94,10 +97,16 @@ func _place_resources() -> void:
 			node.secondary_amount = def["secondary_amt"]
 			node.position = pos
 
-			var visual := node.get_node_or_null("Visual") as MeshInstance3D
-			if visual:
-				var mat := StandardMaterial3D.new()
-				mat.albedo_color = def["color"]
-				visual.material_override = mat
+			# Assign the correct sprite texture per resource type
+			var sprite := node.get_node_or_null("Sprite3D") as Sprite3D
+			if sprite and SPRITE_PATHS.has(def["resource_id"]):
+				var tex := load(SPRITE_PATHS[def["resource_id"]]) as Texture2D
+				if tex:
+					sprite.texture = tex
+					var mat := sprite.material_override as StandardMaterial3D
+					if mat:
+						mat = mat.duplicate() as StandardMaterial3D
+						mat.albedo_texture = tex
+						sprite.material_override = mat
 
 			add_child(node)

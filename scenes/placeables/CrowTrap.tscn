@@ -1,15 +1,16 @@
-[gd_scene load_steps=5 format=3 uid="uid://dk7lm3vs9p6wa"]
+[gd_scene load_steps=4 format=3 uid="uid://dk7lm3vs9p6wa"]
 
 [ext_resource type="Script" path="res://scripts/world/CrowTrap.gd" id="1_trap"]
-
-[sub_resource type="BoxMesh" id="BoxMesh_trap"]
-size = Vector3(0.6, 0.3, 0.6)
-
-[sub_resource type="StandardMaterial3D" id="Material_trap"]
-albedo_color = Color(0.55, 0.35, 0.1, 1)
+[ext_resource type="Texture2D" path="res://art/sprites/placeable_crowtrap.png" id="2_tex"]
 
 [sub_resource type="BoxShape3D" id="BoxShape3D_trap"]
 size = Vector3(0.9, 0.4, 0.9)
+
+[sub_resource type="StandardMaterial3D" id="Material_trap"]
+transparency = 1
+albedo_texture = ExtResource("2_tex")
+billboard_mode = 1
+texture_filter = 5
 
 [node name="CrowTrap" type="Area3D"]
 script = ExtResource("1_trap")
@@ -17,9 +18,16 @@ monitoring = true
 monitorable = true
 
 [node name="Visual" type="MeshInstance3D" parent="."]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.15, 0)
-mesh = SubResource("BoxMesh_trap")
-surface_material_override/0 = SubResource("Material_trap")
+visible = false
+
+[node name="Sprite3D" type="Sprite3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.3, 0)
+texture = ExtResource("2_tex")
+pixel_size = 0.004
+billboard = 1
+transparent = true
+alpha_cut = 1
+material_override = SubResource("Material_trap")
 
 [node name="CollisionShape3D" type="CollisionShape3D" parent="."]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.2, 0)
